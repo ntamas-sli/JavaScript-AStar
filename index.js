@@ -1,6 +1,10 @@
 const title = document.querySelector('.title');
 const fields = document.querySelector('.fields');
 
+let getRndInteger = (min, max) => {
+    return Math.floor(Math.random() * (max - min) ) + min;
+  }
+
 let matrixGen = () => {
     const width = window.innerWidth ;
     let numberOfBoxes = Math.floor(width / 30);
@@ -14,47 +18,121 @@ let matrixGen = () => {
     }
     
     fields.innerHTML = string;
-    //const fieldRow = document.getElementsByClassName('field-row');
-    //for (let i = 0; i < fieldRow.length; i++) {
-    //    let fieldCol = fieldRow[i].getElementsByClassName('field-col');
-    //    console.log(fieldCol);
-    //}
     const field = document.querySelectorAll('.field-col');
-
-    field.forEach(e => {
+    
+    field.forEach((e, index) => {
+        let rand = getRndInteger(4,5);
         e.style.width ="28px";
         e.style.height ="28px";
+        if ( index % rand === 0 ) {
+            e.style.backgroundColor = "black";
+        }
     });
+    field[field.length - 1].style.backgroundColor = "green";
+    field[0].style.backgroundColor = "red";
 
-    const fieldRow = document.querySelectorAll('.field-row');
-    const fieldCol = fieldRow[2].querySelectorAll('.field-col');
-    let number = Math.floor(numberOfBoxes / 2);
-    fieldCol[number].style.backgroundColor = "red";
- 
+    //const fieldRow = document.querySelectorAll('.field-row');
+    //const fieldCol = fieldRow[2].querySelectorAll('.field-col');
+    //let number = Math.floor(numberOfBoxes / 2);
+    //fieldCol[number].style.backgroundColor = "red";
+    colorBox();
+}
+
+let dirCheck = (item, lenC, len) => {
+    const fieldCol = document.querySelectorAll('.field-col');
+    dir = [];
+    for (let i = 0; i < 4; i++) {
+        dir[i] = true;
+    }
+    if (item - lenC <= 0 || 
+        fieldCol[item - lenC].style.backgroundColor === "black") {
+        dir[0] = false;
+        // ^
+    } 
+    if (item % lenC === lenC - 1 ||
+        fieldCol[item + 1].style.backgroundColor === "black") {
+        dir[1] = false;
+        // >>
+    }
+    if (item + lenC >= len ||
+        fieldCol[item + lenC].style.backgroundColor === "black") {
+        dir[2] = false;
+        // V
+    }  
+    if (item % lenC === 0 ||
+        fieldCol[item - 1].style.backgroundColor === "black")  {
+        dir[3] = false;
+        // <<
+    } 
+    return dir;
 }
 
 let colorBox = () => {
     const fieldRow = document.querySelectorAll('.field-row');
-    let len1 = fieldRow.length;   
+    let lenRow = fieldRow.length;   
     const fieldCol = document.querySelectorAll('.field-col');
-    let len2 = fieldCol.length / len1;
-    console.log(fieldCol.length / len1);
-  
+    let lenCol = fieldCol.length / lenRow;
+
+    let dir  = dirCheck(2, lenCol, fieldCol.length);
+    console.log(dir);
+
     for (let j = 0; j < fieldCol.length; j++) {
         fieldCol[j].addEventListener('click', () => {
-            console.log(j);
-            if (j - len2 >= 0) {
-                fieldCol[j - len2].style.backgroundColor = "red";
-            }
-            if (j + len2 <= fieldCol.length) {
-                fieldCol[j + len2].style.backgroundColor = "red";
-            }
-            if (j % (fieldCol.length / len1) !== 0) {
-                fieldCol[j - 1].style.backgroundColor = "red";
-            }
-            if (j % (fieldCol.length / len1 ) !== fieldCol.length / len1 - 1) {
-                fieldCol[j + 1].style.backgroundColor = "red";
-            }
+            //fieldCol[j].style.backgroundColor = "red";
+            console.log(lenCol);
+            let countdown = setInterval(() => {
+
+                //if (!fieldCol[j + 1].style.backgroundColor) {
+                //    fieldCol[j + 1].style.backgroundColor = "red";
+                //    fieldCol[j - lenCol].style.backgroundColor = "red";
+                //}
+
+                let dir  = dirCheck(j, lenCol, fieldCol.length);
+                console.log(dir);
+                
+                if (dir[1] === true) {
+                    fieldCol[j + 1].style.backgroundColor = "red";
+                    j = j + 1;
+                } else if (dir[2] === true) {
+                    fieldCol[j + lenCol].style.backgroundColor = "red";
+                    j = j + lenCol;
+                }
+
+                // DIRECTIONS:
+                // UP   : j - lenCol
+                // DOWN : j + lenCol
+                // RIGHT: j + 1  
+                // LEFT : j - 1
+                
+                // BORDER CHECK:
+                // UP   : j - lenCol >= 0
+                // DOWN : j + lenCol <= fieldCol.length
+                // RIGHT: j % lenCol !== lenCol - 1
+                // LEFT : j % lenCol !== 0
+
+                //if (j - lenCol >= 0) {
+                //    fieldCol[j - lenCol].style.backgroundColor = "red";
+                //    j = j - lenCol;
+                //} else {
+                //    if (j % (fieldCol.length / lenRow ) !== fieldCol.length / lenRow - 1) {
+                //        j = j + 1 + fieldCol.length - lenCol;
+                //        fieldCol[j].style.backgroundColor = "red";
+                //    }
+                //} 
+            }, 100);
+            //if (j - lenCol >= 0) {
+            //    fieldCol[j - lenCol].style.backgroundColor = "red";
+            //    j = j - lenCol;
+            //}  
+            //if (j + lenCol <= fieldCol.length) {
+            //    fieldCol[j + lenCol].style.backgroundColor = "red";
+            //} 
+            //if (j % lenCol !== 0) {
+            //    fieldCol[j - 1].style.backgroundColor = "red";
+            //} 
+            //if (j % lenCol !== lenCol - 1) {
+            //    fieldCol[j + 1].style.backgroundColor = "red";
+            //}
         })
     }
 
@@ -72,7 +150,7 @@ let colorBox = () => {
 }
 
 matrixGen();
-colorBox();
+
 //let countdown = setInterval(colorBox, 100);
 
 
