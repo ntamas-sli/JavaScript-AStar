@@ -1,45 +1,7 @@
-const title = document.querySelector('.title');
-const fields = document.querySelector('.fields');
-
-let getRndInteger = (min, max) => {
-    return Math.floor(Math.random() * (max - min) ) + min;
-  }
-
-let matrixGen = () => {
-    const width = window.innerWidth ;
-    let numberOfBoxes = Math.floor(width / 30);
-    let string = ``;
-    for (let i = 0; i < 5; i++) {
-        string += `<div class="field-row">`;
-        for (let j = 0; j < numberOfBoxes; j++) {
-            string += `<div class="field-col">${i},${j}</div>`;
-        }
-        string += `</div>`;
-    }
-    
-    fields.innerHTML = string;
-    const field = document.querySelectorAll('.field-col');
-    
-    field.forEach((e, index) => {
-        let rand = getRndInteger(4,5);
-        e.style.width ="28px";
-        e.style.height ="28px";
-        if ( index % rand === 0 ) {
-            e.style.backgroundColor = "black";
-        }
-    });
-    field[field.length - 1].style.backgroundColor = "green";
-    field[0].style.backgroundColor = "red";
-
-    //const fieldRow = document.querySelectorAll('.field-row');
-    //const fieldCol = fieldRow[2].querySelectorAll('.field-col');
-    //let number = Math.floor(numberOfBoxes / 2);
-    //fieldCol[number].style.backgroundColor = "red";
-    colorBox();
-}
+const fieldCol = document.querySelectorAll('.field-col');
+const fieldRow = document.querySelectorAll('.field-row');
 
 let dirCheck = (item, lenC, len) => {
-    const fieldCol = document.querySelectorAll('.field-col');
     dir = [];
     for (let i = 0; i < 4; i++) {
         dir[i] = true;
@@ -64,23 +26,121 @@ let dirCheck = (item, lenC, len) => {
         dir[3] = false;
         // <<
     } 
+    console.log('dir works')
     return dir;
 }
 
-let colorBox = () => {
-    const fieldRow = document.querySelectorAll('.field-row');
-    let lenRow = fieldRow.length;   
-    const fieldCol = document.querySelectorAll('.field-col');
-    let lenCol = fieldCol.length / lenRow;
+let h = (start, goal) => {
 
-    let dir  = dirCheck(2, lenCol, fieldCol.length);
-    console.log(dir);
+    const width = window.innerWidth ;
+    let lengthRow = Math.floor(width / 30);
+    let startPositionX = start % lengthRow;
+    let startPositionY = Math.floor(start / lengthRow);
+    let goalPositionX = goal % lengthRow;
+    let goalPositionY = Math.floor(goal / lengthRow);
+    let distance;
+
+    if (startPositionX < goalPositionX) {
+        distance = goalPositionX - startPositionX;
+    } else {
+        distance = startPositionX - goalPositionX;
+    }
+    if (startPositionY < goalPositionY) {
+        distance += goalPositionY - startPositionY - 1;
+    } else {
+        distance += startPositionY - goalPositionY - 1;
+    } 
+    
+    return distance;    
+}
+
+Array.min = function( array ){
+    return Math.min.apply( Math, array );
+};
+
+let neighborFind = item => {
+    let lenC = Math.floor(fieldCol.length / fieldRow.length);
+    console.log(lenC)
+    result = [];
+    if (item - lenC >= 0) {
+        if (fieldCol[item - lenC].style.backgroundColor !== "black") {
+            result[0] = item - lenC;
+            // ^
+        } 
+    }
+    if (item % lenC !== lenC - 1) {
+        if (fieldCol[item + 1].style.backgroundColor !== "black") {
+            result[1] = item + 1;
+            // >>
+        }
+    }
+    if (item + lenC <= fieldCol.length) {
+        if (fieldCol[item + lenC].style.backgroundColor !== "black") {
+            result[2] = item + lenC;
+            // V
+        }  
+    }
+    if (item % lenC !== 0) {
+        if (fieldCol[item - 1].style.backgroundColor !== "black")  {
+            result[3] = item - 1;
+            // <<
+        } 
+    }
+
+    return result;
+}
+
+// array.includes(x) for if openSet.includes(neighbor) is not in it, add it to openSet
+
+let aStar = (start, goal) => {
+    let current;
+    let openSet = [];
+    openSet[0] = start;
+    let cameFrom = [];
+    let gScore = [];
+    gScore[start] = 0;
+    let fScore = [];
+    fScore[start] = h(start, goal);
+    current = Array.min(openSet);
+    found = false;
+    while (openSet.length > 0 ) {
+
+        current = Array.min(openSet);
+        if ( current === goal ) {
+            return console.log("YEY");
+        }
+
+        console.log(openSet.length);
+        console.log(openSet[openSet.length - 1]);
+        
+        openSet = openSet.splice(openSet.length - 1, current);
+
+        console.log(openSet.length);
+        console.log(openSet[openSet.length - 1]);
+
+        neighbor = neighborFind(current);
+        console.log(neighbor);
+
+        console.log(neighbor.length, 'nei');
+        for (let i = 0; i < neighbor.length; i++) {
+            console.log(i);
+            console.log('yey');
+        }
+        found = true;
+    }
+}
+
+
+
+
+let colorBox = () => {
+    let lenRow = fieldRow.length;   
+    let lenCol = fieldCol.length / lenRow;
 
     for (let j = 0; j < fieldCol.length; j++) {
         fieldCol[j].addEventListener('click', () => {
             //fieldCol[j].style.backgroundColor = "red";
-            console.log(lenCol);
-            let countdown = setInterval(() => {
+
 
                 //if (!fieldCol[j + 1].style.backgroundColor) {
                 //    fieldCol[j + 1].style.backgroundColor = "red";
@@ -88,8 +148,7 @@ let colorBox = () => {
                 //}
 
                 let dir  = dirCheck(j, lenCol, fieldCol.length);
-                console.log(dir);
-                
+
                 if (dir[1] === true) {
                     fieldCol[j + 1].style.backgroundColor = "red";
                     j = j + 1;
@@ -119,7 +178,6 @@ let colorBox = () => {
                 //        fieldCol[j].style.backgroundColor = "red";
                 //    }
                 //} 
-            }, 100);
             //if (j - lenCol >= 0) {
             //    fieldCol[j - lenCol].style.backgroundColor = "red";
             //    j = j - lenCol;
@@ -149,12 +207,10 @@ let colorBox = () => {
     //});
 }
 
-matrixGen();
 
 //let countdown = setInterval(colorBox, 100);
 
+colorBox();
+aStar(0, 12);
 
-
-window.addEventListener('resize', matrixGen);
-
-
+window.addEventListener('resize', colorBox);
