@@ -84,14 +84,17 @@ let neighborFind = item => {
     return result;
 }
 
-let minFind = ((array,fS) => {
+let minFind = ((array, fS, g) => {
     let min = array[0];
     let minIndex = 0;
     for (let i = 1; i < array.length; i++) {
         if (fS[min] > fS[array[i]]) {
             minIndex = i;    
             min = array[i];
-        }
+        } else if (h(min, g) > h(array[i], g)) {
+            minIndex = i;    
+            min = array[i];
+        }   
     }
     return minIndex;
 })
@@ -100,6 +103,9 @@ let minFind = ((array,fS) => {
 
 //FIX neighborFind to not take nodes which were already visited
 // Idea, if node is RED(visited) or GREEN(start) , skip it
+
+
+// aStar probably doesn't work as intended, try debuging. ###################
 
 let aStar = (start, goal) => {
     let tentative_gScore;
@@ -118,9 +124,9 @@ let aStar = (start, goal) => {
     fScore[start] = h(start, goal);
 
     found = 0;
-    while (openSet.length > 0 ) {
+    while (openSet.length > 0) {
 
-        index = minFind(openSet, fScore);
+        index = minFind(openSet, fScore, goal);
         current = openSet[index];
         console.log(current, 'starting index')
         console.log(fScore,  'fscore');
@@ -144,6 +150,8 @@ let aStar = (start, goal) => {
                     cameFrom[val] = current;
                     gScore[val] = tentative_gScore;
                     fScore[val] = gScore[val] + h(val, goal);
+                    fieldCol[val].style.backgroundColor = "green";
+                    fieldCol[val].innerHTML = `${fScore[val]},${gScore[val]}`;
                 }
             
             if (!openSet.includes(val)) {
@@ -159,11 +167,11 @@ let aStar = (start, goal) => {
 
 let reconstPath = (array, g, s) => {
     let numb = g;
-    console.log(numb)
+    
     while (array[numb] !== array[s]) {
         numb = array[numb];
         fieldCol[numb].style.backgroundColor = "purple";
-        console.log(numb);
+        
     }
 }
 
