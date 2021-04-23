@@ -34,100 +34,116 @@ let h = (start, goal) => {
 
     const width = window.innerWidth ;
     let lengthRow = Math.floor(width / 30);
-    let startPositionX = start % lengthRow;
-    let startPositionY = Math.floor(start / lengthRow);
-    let goalPositionX = goal % lengthRow;
-    let goalPositionY = Math.floor(goal / lengthRow);
-    let distance;
 
-    if (startPositionX < goalPositionX) {
-        distance = goalPositionX - startPositionX;
-    } else {
-        distance = startPositionX - goalPositionX;
-    }
-    if (startPositionY < goalPositionY) {
-        distance += goalPositionY - startPositionY - 1;
-    } else {
-        distance += startPositionY - goalPositionY - 1;
-    } 
+    let startPositionX = Math.floor(start / lengthRow);
+    let startPositionY = start % lengthRow;
+    let goalPositionX = Math.floor(goal / lengthRow);
+    let goalPositionY = goal % lengthRow;
+
+    
+    let distance = Math.abs(goalPositionX - startPositionX) + 
+                   Math.abs(goalPositionY - startPositionY);
     
     return distance;    
 }
 
-Array.min = function( array ){
-    return Math.min.apply( Math, array );
-};
-
 let neighborFind = item => {
     let lenC = Math.floor(fieldCol.length / fieldRow.length);
-    console.log(lenC)
     result = [];
     if (item - lenC >= 0) {
         if (fieldCol[item - lenC].style.backgroundColor !== "black") {
-            result[0] = item - lenC;
+            result.push(item - lenC);
             // ^
         } 
     }
     if (item % lenC !== lenC - 1) {
         if (fieldCol[item + 1].style.backgroundColor !== "black") {
-            result[1] = item + 1;
+            result.push(item + 1);
             // >>
         }
     }
     if (item + lenC <= fieldCol.length) {
         if (fieldCol[item + lenC].style.backgroundColor !== "black") {
-            result[2] = item + lenC;
+            result.push(item + lenC);
             // V
         }  
     }
     if (item % lenC !== 0) {
         if (fieldCol[item - 1].style.backgroundColor !== "black")  {
-            result[3] = item - 1;
+            result.push(item - 1);
             // <<
         } 
     }
-
     return result;
 }
+
+let minFind = ((array,fS) => {
+    let min = array[0];
+    console.log(fS[array[0]],'asdasdasd');
+    for (let i = 1; i < array.length; i++) {
+        console.log(fS[array[i]],'asdasdasd');
+        if (fS[min] > fS[array[i]]) {
+
+            min = array[i];
+        }
+    }
+    return min;
+})
 
 // array.includes(x) for if openSet.includes(neighbor) is not in it, add it to openSet
 
 let aStar = (start, goal) => {
+    let tentative_gScore;
     let current;
     let openSet = [];
     openSet[0] = start;
+
     let cameFrom = [];
     let gScore = [];
     gScore[start] = 0;
     let fScore = [];
     fScore[start] = h(start, goal);
-    current = Array.min(openSet);
-    found = false;
-    while (openSet.length > 0 ) {
+    console.log(fScore,  'fscore');
 
-        current = Array.min(openSet);
+    found = 0;
+    while (openSet.length > 0 && found < 25) {
+
+        current = minFind(openSet, fScore);
+        console.log(current, 'starting index')
+        console.log(fScore,  'fscore');
+
         if ( current === goal ) {
             return console.log("YEY");
         }
-
-        console.log(openSet.length);
-        console.log(openSet[openSet.length - 1]);
-        
-        openSet = openSet.splice(openSet.length - 1, current);
-
-        console.log(openSet.length);
-        console.log(openSet[openSet.length - 1]);
-
+        console.log(openSet);
+        openSet.pop(current);
+        console.log(openSet);
         neighbor = neighborFind(current);
-        console.log(neighbor);
+        tentative_gScore = gScore[current] + 1;
+     
+        
 
-        console.log(neighbor.length, 'nei');
         for (let i = 0; i < neighbor.length; i++) {
-            console.log(i);
-            console.log('yey');
+
+            let val = neighbor[i];
+
+            if (gScore[val] === undefined ||
+                tentative_gScore < gScore[val]) {
+                    cameFrom[val] = current;
+                    gScore[val] = tentative_gScore;
+                    fScore[val] = gScore[val] + h(val, goal);
+                }
+            console.log(val, 'neigbors fscore:' , fScore[val])
+            
+            if (!openSet.includes(val)) {
+                found++;
+                openSet.push(val);
+            }
+            
         }
-        found = true;
+        
     }
+    console.log(openSet);
 }
 
 
@@ -211,6 +227,6 @@ let colorBox = () => {
 //let countdown = setInterval(colorBox, 100);
 
 colorBox();
-aStar(0, 12);
+aStar(1, 65);
 
 window.addEventListener('resize', colorBox);

@@ -8,10 +8,12 @@ let matrixGen = () => {
     const width = window.innerWidth ;
     let numberOfBoxes = Math.floor(width / 30);
     let string = ``;
+    let k = 0;
     for (let i = 0; i < 5; i++) {
         string += `<div class="field-row">`;
         for (let j = 0; j < numberOfBoxes; j++) {
-            string += `<div class="field-col">${i},${j}</div>`;
+            string += `<div class="field-col">${k}</div>`;
+            k++;
         }
         string += `</div>`;
     }
@@ -30,7 +32,7 @@ let matrixGen = () => {
         }
     });
     field[field.length - 1].style.backgroundColor = "green";
-    field[0].style.backgroundColor = "red";
+    field[1].style.backgroundColor = "red";
 }
 
 matrixGen();
