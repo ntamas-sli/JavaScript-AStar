@@ -26,7 +26,8 @@ let matrixGen = () => {
         e.style.width ="28px";
         e.style.height ="28px";
         if ( index % rand === 0 ) {
-            e.style.backgroundColor = "black";
+            //e.style.backgroundColor = "black";
+            e.style.backgroundColor = "white";
         } else {
             e.style.backgroundColor = "white";
         }

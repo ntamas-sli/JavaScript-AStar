@@ -47,31 +47,38 @@ let h = (start, goal) => {
     return distance;    
 }
 
+//FIX neighborFind to not take nodes which were already visited
+// Idea, if node is RED(visited) or GREEN(start) , skip it
+
 let neighborFind = item => {
     let lenC = Math.floor(fieldCol.length / fieldRow.length);
     result = [];
     if (item - lenC >= 0) {
-        if (fieldCol[item - lenC].style.backgroundColor !== "black") {
-            result.push(item - lenC);
-            // ^
+        if (fieldCol[item - lenC].style.backgroundColor !== "black" &&
+            fieldCol[item - lenC].style.backgroundColor !== "red") {
+                result.push(item - lenC);
+                // ^
         } 
     }
     if (item % lenC !== lenC - 1) {
-        if (fieldCol[item + 1].style.backgroundColor !== "black") {
-            result.push(item + 1);
-            // >>
+        if (fieldCol[item + 1].style.backgroundColor !== "black" &&
+            fieldCol[item + 1].style.backgroundColor !== "red") {
+                result.push(item + 1);
+                // >>
         }
     }
     if (item + lenC <= fieldCol.length) {
-        if (fieldCol[item + lenC].style.backgroundColor !== "black") {
-            result.push(item + lenC);
-            // V
+        if (fieldCol[item + lenC].style.backgroundColor !== "black" &&
+            fieldCol[item + lenC].style.backgroundColor !== "red") {
+                result.push(item + lenC);
+                // V
         }  
     }
     if (item % lenC !== 0) {
-        if (fieldCol[item - 1].style.backgroundColor !== "black")  {
-            result.push(item - 1);
-            // <<
+        if (fieldCol[item - 1].style.backgroundColor !== "black" &&
+            fieldCol[item - 1].style.backgroundColor !== "red")  {
+                result.push(item - 1);
+                // <<
         } 
     }
     return result;
@@ -79,48 +86,53 @@ let neighborFind = item => {
 
 let minFind = ((array,fS) => {
     let min = array[0];
-    console.log(fS[array[0]],'asdasdasd');
+    let minIndex = 0;
     for (let i = 1; i < array.length; i++) {
-        console.log(fS[array[i]],'asdasdasd');
         if (fS[min] > fS[array[i]]) {
-
+            minIndex = i;    
             min = array[i];
         }
     }
-    return min;
+    return minIndex;
 })
 
 // array.includes(x) for if openSet.includes(neighbor) is not in it, add it to openSet
 
+//FIX neighborFind to not take nodes which were already visited
+// Idea, if node is RED(visited) or GREEN(start) , skip it
+
 let aStar = (start, goal) => {
     let tentative_gScore;
     let current;
-    let openSet = [];
+    const openSet = [];
     openSet[0] = start;
+  
+    console.log(openSet,  'openSet at the very start');
+    console.log(openSet[2],  'openSet at the very start');
+
 
     let cameFrom = [];
     let gScore = [];
     gScore[start] = 0;
     let fScore = [];
     fScore[start] = h(start, goal);
-    console.log(fScore,  'fscore');
 
     found = 0;
-    while (openSet.length > 0 && found < 25) {
+    while (openSet.length > 0 ) {
 
-        current = minFind(openSet, fScore);
+        index = minFind(openSet, fScore);
+        current = openSet[index];
         console.log(current, 'starting index')
         console.log(fScore,  'fscore');
-
+        fieldCol[current].style.backgroundColor = "red";
         if ( current === goal ) {
             return console.log("YEY");
         }
-        console.log(openSet);
-        openSet.pop(current);
-        console.log(openSet);
+        console.log(openSet,  'openSet before pop');
+        openSet.splice(index, 1);
+        console.log(openSet,  'openSet after pop');
         neighbor = neighborFind(current);
         tentative_gScore = gScore[current] + 1;
-     
         
 
         for (let i = 0; i < neighbor.length; i++) {
@@ -133,7 +145,6 @@ let aStar = (start, goal) => {
                     gScore[val] = tentative_gScore;
                     fScore[val] = gScore[val] + h(val, goal);
                 }
-            console.log(val, 'neigbors fscore:' , fScore[val])
             
             if (!openSet.includes(val)) {
                 found++;
@@ -143,7 +154,7 @@ let aStar = (start, goal) => {
         }
         
     }
-    console.log(openSet);
+    return console.log('There is no path to the target given.');
 }
 
 
@@ -227,6 +238,6 @@ let colorBox = () => {
 //let countdown = setInterval(colorBox, 100);
 
 colorBox();
-aStar(1, 65);
+aStar(1, 79);
 
 window.addEventListener('resize', colorBox);
