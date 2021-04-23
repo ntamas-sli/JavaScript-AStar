@@ -126,7 +126,7 @@ let aStar = (start, goal) => {
         console.log(fScore,  'fscore');
         fieldCol[current].style.backgroundColor = "red";
         if ( current === goal ) {
-            return console.log("YEY");
+            return reconstPath(cameFrom, goal, start);
         }
         console.log(openSet,  'openSet before pop');
         openSet.splice(index, 1);
@@ -157,6 +157,15 @@ let aStar = (start, goal) => {
     return console.log('There is no path to the target given.');
 }
 
+let reconstPath = (array, g, s) => {
+    let numb = g;
+    console.log(numb)
+    while (array[numb] !== array[s]) {
+        numb = array[numb];
+        fieldCol[numb].style.backgroundColor = "purple";
+        console.log(numb);
+    }
+}
 
 
 
