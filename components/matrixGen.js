@@ -12,7 +12,7 @@ let matrixGen = () => {
     for (let i = 0; i < 5; i++) {
         string += `<div class="field-row">`;
         for (let j = 0; j < numberOfBoxes; j++) {
-            string += `<div class="field-col">${k}</div>`;
+            string += `<div class="field-col"></div>`;
             k++;
         }
         string += `</div>`;

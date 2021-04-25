@@ -1,5 +1,9 @@
 const fieldCol = document.querySelectorAll('.field-col');
 const fieldRow = document.querySelectorAll('.field-row');
+const startBtn = document.querySelector('.btn-start');
+const asd = document.querySelector('#asd');
+let color = [];
+let colorIndex = [];
 
 let dirCheck = (item, lenC, len) => {
     dir = [];
@@ -112,10 +116,6 @@ let aStar = (start, goal) => {
     let current;
     const openSet = [];
     openSet[0] = start;
-  
-    console.log(openSet,  'openSet at the very start');
-    console.log(openSet[2],  'openSet at the very start');
-
 
     let cameFrom = [];
     let gScore = [];
@@ -124,45 +124,91 @@ let aStar = (start, goal) => {
     fScore[start] = h(start, goal);
 
     found = 0;
-    while (openSet.length > 0) {
-
-        index = minFind(openSet, fScore, goal);
-        current = openSet[index];
-        console.log(current, 'starting index')
-        console.log(fScore,  'fscore');
-        fieldCol[current].style.backgroundColor = "red";
-        if ( current === goal ) {
-            return reconstPath(cameFrom, goal, start);
-        }
-        console.log(openSet,  'openSet before pop');
-        openSet.splice(index, 1);
-        console.log(openSet,  'openSet after pop');
-        neighbor = neighborFind(current);
-        tentative_gScore = gScore[current] + 1;
+    let aStarDelay = () => {
+        setTimeout(() => {
+            index = minFind(openSet, fScore, goal);
+            current = openSet[index];
         
-
-        for (let i = 0; i < neighbor.length; i++) {
-
-            let val = neighbor[i];
-
-            if (gScore[val] === undefined ||
-                tentative_gScore < gScore[val]) {
-                    cameFrom[val] = current;
-                    gScore[val] = tentative_gScore;
-                    fScore[val] = gScore[val] + h(val, goal);
-                    fieldCol[val].style.backgroundColor = "green";
-                    fieldCol[val].innerHTML = `${fScore[val]},${gScore[val]}`;
-                }
-            
-            if (!openSet.includes(val)) {
-                found++;
-                openSet.push(val);
+            fieldCol[current].style.backgroundColor = "red";
+            if ( current === goal ) {
+                found = 1;
+                return reconstPath(cameFrom, goal, start);
             }
             
-        }
+            openSet.splice(index, 1);
         
+            neighbor = neighborFind(current);
+            tentative_gScore = gScore[current] + 1;
+            
+        
+            for (let i = 0; i < neighbor.length; i++) {
+        
+                let val = neighbor[i];
+        
+                if (gScore[val] === undefined ||
+                    tentative_gScore < gScore[val]) {
+                        cameFrom[val] = current;
+                        gScore[val] = tentative_gScore;
+                        fScore[val] = gScore[val] + h(val, goal);
+        
+                        fieldCol[val].style.backgroundColor = "green";
+                        fieldCol[val].innerHTML = `${fScore[val]},${gScore[val]}`;
+                    }
+                
+                if (!openSet.includes(val)) {
+                    openSet.push(val);
+                }
+            }
+            if (openSet.length > 0 && found < 1) {
+                aStarDelay();
+            }
+        }, 100);
     }
-    return console.log('There is no path to the target given.');
+    aStarDelay();
+
+    
+    //while (openSet.length > 0 && found !== 5) {
+    //
+//
+    //    index = minFind(openSet, fScore, goal);
+    //    current = openSet[index];
+//
+    //    fieldCol[current].style.backgroundColor = "red";
+    //    if ( current === goal ) {
+    //        return reconstPath(cameFrom, goal, start);
+    //    }
+    //   
+    //    openSet.splice(index, 1);
+  //
+    //    neighbor = neighborFind(current);
+    //    tentative_gScore = gScore[current] + 1;
+    //    
+//
+    //    for (let i = 0; i < neighbor.length; i++) {
+//
+    //        let val = neighbor[i];
+//
+    //        if (gScore[val] === undefined ||
+    //            tentative_gScore < gScore[val]) {
+    //                cameFrom[val] = current;
+    //                gScore[val] = tentative_gScore;
+    //                fScore[val] = gScore[val] + h(val, goal);
+    //
+    //                fieldCol[val].style.backgroundColor = "green";
+    //                fieldCol[val].innerHTML = `${fScore[val]},${gScore[val]}`;
+    //            }
+    //        
+    //        if (!openSet.includes(val)) {
+    //            openSet.push(val);
+    //        }
+    //        
+    //    }
+    //    
+    //}
+    console.log(found);
+    if (found === 0) {
+        return console.log('There is no path to the target given.');
+    }
 }
 
 let reconstPath = (array, g, s) => {
@@ -170,11 +216,11 @@ let reconstPath = (array, g, s) => {
     
     while (array[numb] !== array[s]) {
         numb = array[numb];
+
         fieldCol[numb].style.backgroundColor = "purple";
         
     }
 }
-
 
 
 let colorBox = () => {
@@ -182,24 +228,17 @@ let colorBox = () => {
     let lenCol = fieldCol.length / lenRow;
 
     for (let j = 0; j < fieldCol.length; j++) {
-        fieldCol[j].addEventListener('click', () => {
+        fieldCol[j].addEventListener('pressHold', () => {
             //fieldCol[j].style.backgroundColor = "red";
-
-
+                
+               
                 //if (!fieldCol[j + 1].style.backgroundColor) {
                 //    fieldCol[j + 1].style.backgroundColor = "red";
                 //    fieldCol[j - lenCol].style.backgroundColor = "red";
                 //}
 
-                let dir  = dirCheck(j, lenCol, fieldCol.length);
 
-                if (dir[1] === true) {
-                    fieldCol[j + 1].style.backgroundColor = "red";
-                    j = j + 1;
-                } else if (dir[2] === true) {
-                    fieldCol[j + lenCol].style.backgroundColor = "red";
-                    j = j + lenCol;
-                }
+                fieldCol[j].style.backgroundColor = "black"; 
 
                 // DIRECTIONS:
                 // UP   : j - lenCol
@@ -255,6 +294,49 @@ let colorBox = () => {
 //let countdown = setInterval(colorBox, 100);
 
 colorBox();
-aStar(1, 79);
+startBtn.addEventListener('click', () => {
+    aStar(1, 79);
+});
 
 window.addEventListener('resize', colorBox);
+
+(function asd1() {
+
+    var mouseTimer;
+    function mouseDown() { 
+        mouseUp();
+        mouseTimer = window.setTimeout(execMouseDown,100); //set timeout to fire in 2 seconds when the user presses mouse button down
+        asd.innerHTML = `CLICKED`;
+    }
+  
+    function mouseUp() { 
+        if (mouseTimer) window.clearTimeout(mouseTimer);  //cancel timer when mouse button is released
+        div.style.backgroundColor = "#FFFFFF";
+        asd.innerHTML = `UP`;
+    }
+  
+    function execMouseDown() { 
+        div.style.backgroundColor = "#CFCF00";
+        asd.innerHTML = `HOLD`;
+        fieldCol.forEach( item => {
+            item.addEventListener('mouseover', e => {
+                item.style.backgroundColor = "black";
+                console.log(e.type);
+            });          
+        })
+        let check = 0;
+        fields.addEventListener('mouseup', () => {
+            check = 1;
+        });
+        if (check === 1) {
+            return
+        }
+    }
+  
+    var div = document.getElementById("asd");
+    
+    window.addEventListener("mousedown", mouseDown);
+    document.body.addEventListener("mouseup", mouseUp);  //listen for mouse up event on body, not just the element you originally clicked on
+    
+  }());
+
