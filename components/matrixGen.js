@@ -1,5 +1,6 @@
 const fields = document.querySelector('.fields');   
 
+
 let getRndInteger = (min, max) => {
     return Math.floor(Math.random() * (max - min) ) + min;
   }
@@ -12,7 +13,7 @@ let matrixGen = () => {
     for (let i = 0; i < 5; i++) {
         string += `<div class="field-row">`;
         for (let j = 0; j < numberOfBoxes; j++) {
-            string += `<div class="field-col"></div>`;
+            string += `<div class="field-col" ></div>`;
             k++;
         }
         string += `</div>`;
@@ -34,7 +35,35 @@ let matrixGen = () => {
     });
     field[field.length - 1].style.backgroundColor = "green";
     field[1].style.backgroundColor = "red";
+    colorBox();
 }
+
+let colorBox = () => {
+
+    const fields = document.querySelectorAll('.field-col');
+    arrayFields = [];
+    let check = 0;
+
+    fields.forEach( item => {
+
+        let execMouseDown = () => {
+            let val = item.style.backgroundColor;
+            if (val !== 'red' && val !== 'green') {
+                if (val === 'white') {
+                    item.style.backgroundColor = 'black';
+                } else {
+                    item.style.backgroundColor = 'white';
+                }
+            }
+        }
+
+        
+    
+        item.addEventListener('click', execMouseDown);
+        
+
+    });
+};
 
 matrixGen();
 
