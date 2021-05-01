@@ -22,16 +22,10 @@ let matrixGen = () => {
     fields.innerHTML = string;
     const field = document.querySelectorAll('.field-col');
     
-    field.forEach((e, index) => {
-        let rand = getRndInteger(4,5);
+    field.forEach( e => {
         e.style.width ="28px";
         e.style.height ="28px";
-        if ( index % rand === 0 ) {
-            //e.style.backgroundColor = "black";
-            e.style.backgroundColor = "white";
-        } else {
-            e.style.backgroundColor = "white";
-        }
+        e.style.backgroundColor = "white";
     });
     field[field.length - 1].style.backgroundColor = "green";
     field[1].style.backgroundColor = "red";

@@ -1,9 +1,7 @@
-const fieldCol = document.querySelectorAll('.field-col');
-const fieldRow = document.querySelectorAll('.field-row');
-const startBtn = document.querySelector('.btn-start');
-const asd = document.querySelector('#asd');
-let color = [];
-let colorIndex = [];
+let fieldCol = document.querySelectorAll('.field-col');
+let fieldRow = document.querySelectorAll('.field-row');
+console.log(fieldCol.length);
+
 
 let h = (start, goal) => {
 
@@ -113,7 +111,7 @@ let aStar = (start, goal) => {
                         fScore[val] = gScore[val] + h(val, goal);
         
                         fieldCol[val].style.backgroundColor = "green";
-                        fieldCol[val].innerHTML = `${fScore[val]},${gScore[val]}`;
+                        //fieldCol[val].innerHTML = `${fScore[val]},${gScore[val]}`;
                     }
                 
                 if (!openSet.includes(val)) {
@@ -123,7 +121,7 @@ let aStar = (start, goal) => {
             if (openSet.length > 0 ) {
                 aStarDelay();
             }
-        }, 100);
+        }, 50);
     }
     aStarDelay();
 
@@ -131,12 +129,16 @@ let aStar = (start, goal) => {
 
 let reconstPath = (array, g, s) => {
     let numb = g;
-    
+    fieldCol[numb].style.backgroundColor = "purple";
     while (array[numb] !== array[s]) {
         numb = array[numb];
         fieldCol[numb].style.backgroundColor = "purple";       
     }
+    resetBtn.style.display = 'inline-block';
 }
 
 window.addEventListener('resize', colorBox);
-
+window.addEventListener('resize', () => {
+    fieldCol = document.querySelectorAll('.field-col');
+    fieldRow = document.querySelectorAll('.field-row');
+});
