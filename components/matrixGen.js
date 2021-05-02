@@ -53,7 +53,7 @@ let colorBox = () => {
 
         
     
-        item.addEventListener('click', execMouseDown);
+        item.addEventListener('mousedown', execMouseDown);
         
 
     });
