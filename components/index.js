@@ -120,6 +120,8 @@ let aStar = (start, goal) => {
             }
             if (openSet.length > 0 ) {
                 aStarDelay();
+            } else {
+                resetBtn.style.display = 'inline-block';
             }
         }, 50);
     }
