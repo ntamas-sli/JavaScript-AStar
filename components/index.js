@@ -63,9 +63,11 @@ let minFind = ((array, fS, g) => {
             minIndex = i;    
             min = array[i];
         } 
-        else if (h(min, g) > h(array[i], g)) {
-            minIndex = i;    
-            min = array[i];
+        else if (fS[min] === fS[array[i]]) { 
+            if (h(min, g) > h(array[i], g)) {
+                minIndex = i;    
+                min = array[i];
+            }
         }   
     }
     return minIndex;
