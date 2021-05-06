@@ -1,12 +1,13 @@
 let fieldCol = document.querySelectorAll('.field-col');
 let fieldRow = document.querySelectorAll('.field-row');
-console.log(fieldCol.length);
-
+let rangethingy = document.getElementById('range-thingy');
+boxSize = parseInt(rangethingy.value);
+console.log(rangethingy.value);
 
 let h = (start, goal) => {
 
     const width = window.innerWidth ;
-    let lengthRow = Math.floor(width / 30);
+    let lengthRow = Math.floor(width / boxSize);
 
     let startPositionX = Math.floor(start / lengthRow);
     let startPositionY = start % lengthRow;
@@ -125,7 +126,7 @@ let aStar = (start, goal) => {
             } else {
                 resetBtn.style.display = 'inline-block';
             }
-        }, 50);
+        }, 10);
     }
     aStarDelay();
 
@@ -142,7 +143,44 @@ let reconstPath = (array, g, s) => {
 }
 
 window.addEventListener('resize', colorBox);
-window.addEventListener('resize', () => {
+window.addEventListener('resize', () => {   
     fieldCol = document.querySelectorAll('.field-col');
     fieldRow = document.querySelectorAll('.field-row');
 });
+
+let testFunction = () => {
+    let pageWidth = window.innerWidth;
+    let pageX = Math.floor((window.event.pageX) / boxSize);
+    let pageY = Math.floor((window.event.pageY) / boxSize);
+    console.log(rect);
+    console.log(pageY, window.event.pageY, "YYYYYYYY");
+    console.log(pageX, window.event.pageX, "XXXXXXX");
+
+    let rowLength = Math.floor(pageWidth / boxSize);
+    let current = pageX + pageY * rowLength; 
+    console.log(current);
+
+    if (fieldCol[current].style.backgroundColor === "white" ||
+        fieldCol[current].style.backgroundColor === "black") {
+
+            if (fieldCol[current].style.backgroundColor === "white") {
+                fieldCol[current].style.backgroundColor = "black";
+            } else {
+                fieldCol[current].style.backgroundColor = "white";
+            }
+        }
+};
+let activate = () => {
+    
+    fieldCol.forEach( item => {
+        item.addEventListener("mouseover", testFunction);
+    });
+};
+let deactivate = () => {
+    fieldCol.forEach( item => {
+        item.removeEventListener("mouseover", testFunction);
+    })
+} 
+
+document.addEventListener("mousedown", activate);
+document.addEventListener("mouseup", deactivate);
