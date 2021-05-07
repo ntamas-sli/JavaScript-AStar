@@ -11,17 +11,25 @@ let matrixGen = () => {
     let width = window.innerWidth;
     if (launch === false) {
         boxSize = parseInt(rangethingy.value);
-        console.log(boxSize);
     }
-    console.log(boxSize);
-    let numberOfBoxes = Math.floor(width / boxSize);
+
+    let numberOfCols = Math.floor(width / boxSize);
+    let numberOfRows = Math.floor(numberOfCols / 2);
     let string = ``;
-    let k = 0;
-    for (let i = 0; i < numberOfBoxes / 2 - 1; i++) {
+
+    for (let i = 0; i < numberOfRows; i++) {
         string += `<div class="field-row">`;
-        for (let j = 0; j < numberOfBoxes; j++) {
-            string += `<div class="field-col" ></div>`;
-            k++;
+        for (let j = 0; j < numberOfCols; j++) {
+
+            if (i === 0 && j === 0 || 
+                i === numberOfRows - 1  && j === numberOfCols - 1) {
+                string += `<div class="field-col" id="${i*numberOfCols + j}" >
+                                <i class="fas fa-chevron-right fill" draggable="true"></i>
+                            </div>`;
+            } else {
+                string += `<div class="field-col empty" id="${i*numberOfCols + j}"></div>`;
+            }
+  
         }
         string += `</div>`;
     }
@@ -36,8 +44,8 @@ let matrixGen = () => {
         e.style.height =`${boxSize - 2}px`;
         e.style.backgroundColor = "white";
     });
-    field[field.length - 1].style.backgroundColor = "green";
-    field[1].style.backgroundColor = "red";
+    field[field.length - 1].style.backgroundColor = "purple";
+    field[0].style.backgroundColor = "green";
     colorBox();
 }
 

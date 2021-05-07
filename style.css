@@ -55,19 +55,30 @@ header {
 }
 
 .field-col {
-   
     border: 1px solid black;
     font-size: 10px;
-
+    display:flex;
+    justify-content: center;
 }
 
 .btn-start {
     margin-right: 10px;
 }
-
 .btn-reset {
     display:none;
 }
+.btn-stop {
+    display:none;
+}
+
+i.fas.fa-chevron-right::before {
+    font-size: 40px;
+}
+
+.invisible {
+    display: none;
+}
+
 
 footer {
     display: flex;
