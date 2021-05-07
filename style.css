@@ -61,8 +61,24 @@ header {
 
 }
 
+.btn-start {
+    margin-right: 10px;
+}
+
 .btn-reset {
     display:none;
+}
+
+footer {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    
+}
+
+.setting {
+    display: flex;
+    flex-direction: row;
 }
 
 @media screen and (max-width: 800px) {

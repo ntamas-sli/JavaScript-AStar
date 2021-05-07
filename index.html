@@ -24,12 +24,19 @@
        </div>
     </section>
     <footer>
-        <div id="asd">
-            
-        </div>
          <button class="btn-start"> Start </button>
          <button class="btn-reset"> Reset </button>
-         <input type="range" min= "15" max = "100" value = "40" id="range-thingy">
+         <div class="setting">
+            <div>
+                <label for="range"> Set the size : </label>
+                <input type="range" min= "15" max = "100" value = "40" id="size-setting" name="range">
+                <button class="btn-regen"> Regenarate </button>
+            </div>
+            <div>
+                <label for="speed"> Set the speed : </label>
+                <input type="range" min= "5" max = "20" value = "10" id="speed-setting" name="speed">
+            </div>
+         </div>
     </footer>
 </body>
 

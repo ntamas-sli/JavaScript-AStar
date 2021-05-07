@@ -1,11 +1,10 @@
 let fieldCol = document.querySelectorAll('.field-col');
 let fieldRow = document.querySelectorAll('.field-row');
-let rangethingy = document.getElementById('range-thingy');
-boxSize = parseInt(rangethingy.value);
-console.log(rangethingy.value);
+let rangethingy = document.getElementById('size-setting');
+let speedSetting = document.getElementById('speed-setting');
+launch = false;
 
 let h = (start, goal) => {
-
     const width = window.innerWidth ;
     let lengthRow = Math.floor(width / boxSize);
 
@@ -80,6 +79,9 @@ let aStar = (start, goal) => {
     const openSet = [];
     openSet[0] = start;
 
+    let speed = parseInt(speedSetting.value);
+    speed = 500 / speed;
+
     let cameFrom = [];
     let gScore = [];
     gScore[start] = 0;
@@ -126,7 +128,7 @@ let aStar = (start, goal) => {
             } else {
                 resetBtn.style.display = 'inline-block';
             }
-        }, 10);
+        }, speed);
     }
     aStarDelay();
 

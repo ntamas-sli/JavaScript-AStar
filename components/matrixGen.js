@@ -1,20 +1,23 @@
 const fields = document.querySelector('.fields');   
 const rect = fields.getBoundingClientRect();
 let boxSize = 40;
+let launch = true;
 
 let getRndInteger = (min, max) => {
     return Math.floor(Math.random() * (max - min) ) + min;
   }
 
 let matrixGen = () => {
-    const width = window.innerWidth;
-    if (boxSize !== 40) {
+    let width = window.innerWidth;
+    if (launch === false) {
         boxSize = parseInt(rangethingy.value);
+        console.log(boxSize);
     }
+    console.log(boxSize);
     let numberOfBoxes = Math.floor(width / boxSize);
     let string = ``;
     let k = 0;
-    for (let i = 0; i < numberOfBoxes / 2; i++) {
+    for (let i = 0; i < numberOfBoxes / 2 - 1; i++) {
         string += `<div class="field-row">`;
         for (let j = 0; j < numberOfBoxes; j++) {
             string += `<div class="field-col" ></div>`;
