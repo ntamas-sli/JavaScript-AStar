@@ -24,7 +24,6 @@ reGenBtn.addEventListener('click', () => {
     matrixGen();
     fieldCol = document.querySelectorAll('.field-col');
     fieldRow = document.querySelectorAll('.field-row');
-    console.log('works');
 });
 stopBtn.addEventListener('click', () => {
     stopCheck = true;

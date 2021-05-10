@@ -1,6 +1,6 @@
 let fieldCol = document.querySelectorAll('.field-col');
 let fieldRow = document.querySelectorAll('.field-row');
-let rangethingy = document.getElementById('size-setting');
+let sizeValue = document.getElementById('size-setting');
 let speedSetting = document.getElementById('speed-setting');
 launch = false;
 
@@ -132,6 +132,7 @@ let aStar = (start, goal) => {
                 aStarDelay();
             } else {
                 resetBtn.style.display = 'inline-block';
+                stopBtn.style.display = 'none';
             }
         }, speed);
     }

@@ -3,14 +3,10 @@ const rect = fields.getBoundingClientRect();
 let boxSize = 40;
 let launch = true;
 
-let getRndInteger = (min, max) => {
-    return Math.floor(Math.random() * (max - min) ) + min;
-  }
-
 let matrixGen = () => {
     let width = window.innerWidth;
     if (launch === false) {
-        boxSize = parseInt(rangethingy.value);
+        boxSize = parseInt(sizeValue.value);
     }
 
     let numberOfCols = Math.floor(width / boxSize);
@@ -66,13 +62,10 @@ let colorBox = () => {
                     item.style.backgroundColor = 'white';
                 }
             }
-        }
-
-        
+        }      
     
         item.addEventListener('mousedown', execMouseDown);
         
-
     });
 };
 
